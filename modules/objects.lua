@@ -1,4 +1,8 @@
 local module_object_name = "objects"
+
+furniture_items = {}
+test_furniture_items = {"log","honeycomb","beeswax","propolis","axe1","hammer1","beehive1","beehive2","beehive3","beehive4","beehive5","beehive6","beehive7","beehive8","beehive9","beehive10"}
+
 ----------------------------------------------------
 -- CREATE FURNITURE AND RECIPES
 ----------------------------------------------------
@@ -88,7 +92,9 @@ function define_object_honeycomb_bookshelf()
             name = "Honeycomb Bookshelf",
             category = "Decoration",
             tooltip = "A bookshelf made of honeycomb.",
-            tools = {"hammer1"}
+            tools = {"hammer1"},
+            shop_sell = 30,
+            shop_buy = 15
         },
         "sprites/furniture/honeycomb_bookshelf_object.png"
     )
@@ -97,7 +103,7 @@ function define_object_honeycomb_bookshelf()
     if define_object_honeycomb_bookshelf_status ~= "Success" then function_status = nil end
 
     local recipe = {
-        { item = "honeycomb", amount = 5 },
+        { item = "honeycomb", amount = 20 },
         { item = "beeswax", amount = 10 }
     }
 
@@ -107,6 +113,8 @@ function define_object_honeycomb_bookshelf()
         recipe, -- recipe
         1 -- amount
     )
+
+    table.insert(furniture_items, construct_id(object_id))
 
     mod_log_status(define_object_recipe, function_name, "defining honeycomb bookshelf recipe.")
     if define_object_recipe ~= "Success" then function_status = nil end
@@ -129,7 +137,9 @@ function define_object_honeycomb_trophyshelf()
             name = "Honeycomb Trophy Shelf",
             category = "Decoration",
             tooltip = "A trophy shelf made of honeycomb.",
-            tools = {"hammer1"}
+            tools = {"hammer1"},
+            shop_sell = 15,
+            shop_buy = 30
         },
         "sprites/furniture/honeycomb_trophyshelf_object.png"
     )
@@ -138,8 +148,8 @@ function define_object_honeycomb_trophyshelf()
     if define_object_honeycomb_trophyshelf_status ~= "Success" then function_status = nil end
 
     local recipe = {
-        { item = "honeycomb", amount = 10 },
-        { item = "beeswax", amount = 20 }
+        { item = "honeycomb", amount = 20 },
+        { item = "beeswax", amount = 10 }
     }
 
     local define_object_recipe = api_define_recipe(
@@ -148,6 +158,8 @@ function define_object_honeycomb_trophyshelf()
         recipe, -- recipe
         1 -- amount
     )
+
+    table.insert(furniture_items, construct_id(object_id))
 
     mod_log_status(define_object_recipe, function_name, "defining honeycomb trophy shelf recipe.")
     if define_object_recipe ~= "Success" then function_status = nil end
@@ -171,7 +183,9 @@ function define_object_honeycomb_table()
             name = "Honeycomb Table",
             category = "Decoration",
             tooltip = "A table made of honeycomb.",
-            tools = {"hammer1"}
+            tools = {"hammer1"},
+            shop_sell = 15,
+            shop_buy = 30
         },
         "sprites/furniture/honeycomb_table_object.png"
     )
@@ -180,8 +194,7 @@ function define_object_honeycomb_table()
     if define_object_honeycomb_table_status ~= "Success" then function_status = nil end
 
     local recipe = {
-        { item = "honeycomb", amount = 3 },
-        { item = "propolis", amount = 5 },
+        { item = "honeycomb", amount = 15 },
         { item = "beeswax", amount = 10 }
     }
 
@@ -191,6 +204,8 @@ function define_object_honeycomb_table()
         recipe, -- recipe
         1 -- amount
     )
+
+    table.insert(furniture_items, construct_id(object_id))
 
     mod_log_status(define_object_recipe, function_name, "defining honeycomb table recipe.")
     if define_object_recipe ~= "Success" then function_status = nil end
@@ -214,7 +229,9 @@ function define_object_bee_plush()
             name = "Happy Bee Plush",
             category = "Decoration",
             tooltip = "A bee plush with a big smile.",
-            tools = {"mouse1", "hammer1"}
+            tools = {"mouse1", "hammer1"},
+            shop_sell = 5,
+            shop_buy = 10
         },
         "sprites/furniture/bee_plush_happy_object.png"
     )
@@ -223,9 +240,9 @@ function define_object_bee_plush()
     if define_object_bee_plush_status ~= "Success" then function_status = nil end
 
     local recipe = {
-        { item = "honeycomb", amount = 3 },
-        { item = "propolis", amount = 5 },
-        { item = "beeswax", amount = 10 }
+        { item = "honeycomb", amount = 5 },
+        { item = "propolis", amount = 10 },
+        { item = "beeswax", amount = 3 }
     }
 
     local define_object_recipe = api_define_recipe(
@@ -234,6 +251,8 @@ function define_object_bee_plush()
         recipe, -- recipe
         1 -- amount
     )
+
+ --   table.insert(furniture_items, construct_id(object_id)) -- this is Darbee's only special, so don't include it in the furniture rotation.
 
     mod_log_status(define_object_recipe, function_name, "defining happy bee plush recipe.")
     if define_object_recipe ~= "Success" then function_status = nil end
@@ -265,7 +284,9 @@ function define_menu_object_large_crate()
             tools = large_crate_tools,
             info = large_crate_help_info,
             buttons = large_crate_buttons,
-            layout = large_crate_layout
+            layout = large_crate_layout,
+            shop_sell = 15,
+            shop_buy = 30
         },
         "sprites/furniture/honeycomb_large_crate_object.png",
         large_crate_sprite_menu,
@@ -276,8 +297,8 @@ function define_menu_object_large_crate()
     if define_menu_object_large_crate_status ~= "Success" then function_status = nil end
 
     local recipe = {
-        { item = "honeycomb", amount = 10 },
-        { item = "beeswax", amount = 20 }
+        { item = "honeycomb", amount = 20 },
+        { item = "beeswax", amount = 10 }
     }
 
     local define_object_recipe = api_define_recipe(
@@ -286,6 +307,8 @@ function define_menu_object_large_crate()
         recipe, -- recipe
         1 -- amount
     )
+
+    table.insert(furniture_items, construct_id(object_id))
 
     mod_log_status(define_object_recipe, function_name, "defining large honeycomb crate recipe.")
     if define_object_recipe ~= "Success" then function_status = nil end
@@ -310,7 +333,9 @@ function define_menu_object_small_crate()
             tools = small_crate_tools,
             info = small_crate_help_info,
             buttons = small_crate_buttons,
-            layout = small_crate_layout
+            layout = small_crate_layout,
+            shop_sell = 10,
+            shop_buy = 20
         },
         "sprites/furniture/honeycomb_small_crate_object.png",
         small_crate_sprite_menu,
@@ -321,8 +346,8 @@ function define_menu_object_small_crate()
     if define_menu_object_small_crate_status ~= "Success" then function_status = nil end
 
     local recipe = {
-        { item = "honeycomb", amount = 5 },
-        { item = "beeswax", amount = 15 }
+        { item = "honeycomb", amount = 15 },
+        { item = "beeswax", amount = 5 }
     }
 
     local define_object_recipe = api_define_recipe(
@@ -331,6 +356,8 @@ function define_menu_object_small_crate()
         recipe, -- recipe
         1 -- amount
     )
+
+    table.insert(furniture_items, construct_id(object_id))
 
     mod_log_status(define_object_recipe, function_name, "defining small honeycomb crate recipe.")
     if define_object_recipe ~= "Success" then function_status = nil end
