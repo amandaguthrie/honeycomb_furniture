@@ -20,6 +20,11 @@ end
 -- STANDARD SUCCESS/NIL WITH LOGGING OPTIONS
 ----------------------------------------------------
 
+-- Check a resource's completion status, log based on that status, and return the status. Should only be used for functions that return "Success".
+---@param resource function The result of a function that passes back success/nil.
+---@param module table The module that the event ran.
+---@param message string The error message to be returned. Automatically prepended with "Success " or "Failure " to save time writing error messages.
+---
 function mod_log_status(resource, module, message)
 
     if resource == "Success" then 
@@ -42,32 +47,74 @@ function mod_log_status(resource, module, message)
 end
 
 ----------------------------------------------------
--- DEV MODE HELPER GIVE ONE OF EVERYTHING
+-- LOG INFO
 ----------------------------------------------------
 
-function gimme_one_of_everything()
+-- General information logging controlled by global LOGGING_INFO_ENABLED.
+---@param module table The module that the event ran.
+---@param message string The error message to be returned.
+---
+function mod_log_info(module, message)
 
-    api_give_item(MOD_NAME .. "_honeycomb_bookshelf", 1)
-    api_give_item(MOD_NAME .. "_honeycomb_trophyshelf", 1)
-    api_give_item(MOD_NAME .. "_honeycomb_table", 1)
-    api_give_item(MOD_NAME .. "_bee_plush_happy", 1)
-    api_give_item(MOD_NAME .. "_honeycomb_crate_large", 1)
-    api_give_item(MOD_NAME .. "_honeycomb_crate_small", 1)
+    if LOGGING_INFO_ENABLED == true then
+        api_log(module, message)
+    end
+
+    return nil
 
 end
 
--- * Two functions below replaced by mod_log_status
+----------------------------------------------------
+-- CONSTRUCT OBJECT ID
+----------------------------------------------------
 
--- function mod_log(module, message)
---     if LOGGING_ENABLED == true then
---         api_log(module, message)
---     end
--- end
+-- Construct an OID from the global MOD_NAME and an untransformed ID. Returns the full OID as a string.
+---@param untransformed_id string The object ID without the mod name prepended.
+--
+function construct_id(untransformed_id)
 
--- function mod_check_status_success(resource)
---     if resource == "Success" then return "Success"
---     else return nil end
--- end
+    return MOD_NAME .. "_" .. untransformed_id
+
+end
+
+----------------------------------------------------
+-- ITERATE ELEMENTS IN A LIST
+----------------------------------------------------
+
+function iterate_elements(element_collection)
+
+    local index = 0
+    local count = #element_collection
+
+    return function()
+        index = index + 1
+
+        if index <= count then
+            return collection[index]
+        end
+
+    end
+
+end
+
+----------------------------------------------------
+-- DEV MODE HELPER GIVE ONE OF EVERYTHING
+----------------------------------------------------
+
+
+-- Give player one of each item. Useful during testing.
+---@param untransformed_id string The object ID without the mod name prepended.
+--- 
+function gimme_one_of_everything()
+
+    api_give_item(construct_id("honeycomb_bookshelf"), 1)
+    api_give_item(construct_id("honeycomb_trophyshelf"), 1)
+    api_give_item(construct_id("honeycomb_table"), 1)
+    api_give_item(construct_id("bee_plush_happy"), 1)
+    api_give_item(construct_id("honeycomb_crate_large"), 1)
+    api_give_item(construct_id("honeycomb_crate_small"), 1)
+
+end
 
 
 -- * This is functional but slowed down game loading. Maybe only pull when bookshelf is placed?
