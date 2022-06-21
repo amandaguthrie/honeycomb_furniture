@@ -1,8 +1,8 @@
 MOD_NAME = "honeycomb_furniture"
 MOD_NAME_FRIENDLY = "Honeycomb Furniture"
-DEV_MODE_ENABLED = true
-LOGGING_SUCCESSES_ENABLED = true
-LOGGING_FAILURES_ENABLED = true
+DEV_MODE_ENABLED = false
+LOGGING_SUCCESSES_ENABLED = false
+LOGGING_FAILURES_ENABLED = false
 LOGGING_INFO_ENABLED = false
 
 ----------------------------------------------------
@@ -13,7 +13,7 @@ function register()
 
     return {
       name = MOD_NAME,
-      hooks = {"key"}, 
+      hooks = {"key", "ready"}, 
       modules = {"objects", "menus", "npcs", "utilities"} 
     }
 
@@ -40,6 +40,17 @@ function init()
 end
 
 ----------------------------------------------------
+-- READY
+----------------------------------------------------
+
+function ready()
+
+  -- Create Darbee NPC if he doesn't exist.
+  create_npc("npc325")
+  return "Success"
+end
+
+----------------------------------------------------
 -- KEY
 ----------------------------------------------------
 key_f5 = 116
@@ -48,6 +59,7 @@ function key(key_code)
 
   if key_code == key_f5 then
 
+    -- Rotate Darbee's shop stock when F5 is pressed.
     if api_get_property(
       api_get_property(
           api_get_menu_objects(nil, "npc325")[1]["menu_id"],
