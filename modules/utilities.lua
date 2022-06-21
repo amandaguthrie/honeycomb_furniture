@@ -12,6 +12,11 @@ function set_dev_mode()
             "/honeycomb_one_of_everything",
             "gimme_one_of_everything"
         )
+        -- NPCs cannot be deleted via bin. This allows devs to do this for testing. Place the NPC on the map and then run the command.
+        api_define_command(
+            "/destroy_npc",
+            "destroy_npc"
+        )
     end
     
 end
@@ -98,7 +103,7 @@ function iterate_elements(element_collection)
 end
 
 ----------------------------------------------------
--- DEV MODE HELPER GIVE ONE OF EVERYTHING
+-- DEV MODE HELPERS
 ----------------------------------------------------
 
 
@@ -113,6 +118,17 @@ function gimme_one_of_everything()
     api_give_item(construct_id("bee_plush_happy"), 1)
     api_give_item(construct_id("honeycomb_crate_large"), 1)
     api_give_item(construct_id("honeycomb_crate_small"), 1)
+
+end
+
+-- Destroy an NPC by its OID since NPCs can't be deleted via bin. 
+---@param args string The OID of the NPC to destroy all active instances of.
+function destroy_npc(args)
+    npc_all_objects = api_all_menu_objects(args[1])
+
+    for npc=0, #npc_all_objects do
+        api_destroy_inst(npc_all_objects[npc])
+    end
 
 end
 
