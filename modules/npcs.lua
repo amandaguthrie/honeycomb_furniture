@@ -75,9 +75,6 @@ end
 ---@param npc_oid string The OID of the NPC that should be created.
 ---
 function create_npc(npc_oid)
-    check_objects = api_get_objects(nil, npc_oid)
-    mod_log_info(module_object_name .. ".create_npc check_objects:", check_objects)
-    mod_log_info(module_object_name .. ".create_npc #check_objects:", #check_objects)
 
     -- Get all of the menu objects for a given NPC OID. We don't need the full NPC object information, only the IDs.
     npc_all_objects = api_all_menu_objects(npc_oid)
