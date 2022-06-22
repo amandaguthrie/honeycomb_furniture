@@ -1,8 +1,8 @@
 MOD_NAME = "honeycomb_furniture"
 MOD_NAME_FRIENDLY = "Honeycomb Furniture"
-DEV_MODE_ENABLED = false
+DEV_MODE_ENABLED = true
 LOGGING_SUCCESSES_ENABLED = false
-LOGGING_FAILURES_ENABLED = false
+LOGGING_FAILURES_ENABLED = true
 LOGGING_INFO_ENABLED = false
 
 ----------------------------------------------------
@@ -14,7 +14,7 @@ function register()
     return {
       name = MOD_NAME,
       hooks = {"key", "ready"}, 
-      modules = {"objects", "menus", "npcs", "utilities"} 
+      modules = {"objects", "npcs", "utilities"} 
     }
 
 end

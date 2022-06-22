@@ -3,6 +3,12 @@ darbee_stock_index = 1
 local module_object_name = "npcs"
 
 ----------------------------------------------------
+-- NPC MENU DEFAULTS
+----------------------------------------------------
+dialogue_sprite = "sprites/menu/npc_dialogue_menu.png"
+shop_sprite = "sprites/menu/npc_shop_menu.png"
+
+----------------------------------------------------
 -- CREATE NPCS
 ----------------------------------------------------
 
@@ -129,17 +135,17 @@ function generate_stock_line(all_choices, range_start, number_of_items)
     local range_end = range_start + number_of_items
     if #all_choices <= range_end then range_end = #all_choices end
 
-    mod_log_info(module_object_name .. " generate_stock_line All Choices: ", all_choices[{{range_start, range_end}}])
+    -- mod_log_info(module_object_name .. " generate_stock_line All Choices: ", all_choices[{{range_start, range_end}}])
 
     local new_stock_line = {}
     table.move(all_choices, range_start, range_end, 0, new_stock_line)
 
-    mod_log_info(module_object_name .. " generate_stock_line New Stock Line: ", new_stock_line)
-    mod_log_info(module_object_name .. " generate_stock_line New Stock Line #: ", #new_stock_line)
+    -- mod_log_info(module_object_name .. " generate_stock_line New Stock Line: ", new_stock_line)
+    -- mod_log_info(module_object_name .. " generate_stock_line New Stock Line #: ", #new_stock_line)
 
     table.insert(shop_stock_darbee, new_stock_line)
 
-    mod_log_info(module_object_name .. "Shop_Stock_Darbee: ", #shop_stock_darbee)
+    -- mod_log_info(module_object_name .. "Shop_Stock_Darbee: ", #shop_stock_darbee)
 
     return "Success"
 end
@@ -149,20 +155,20 @@ end
 ---
 function set_shop_stock(all_choices)
     -- Determine number of stock inventory
-    mod_log_info(module_object_name .. ".set_shop_stock #all_choices: ", #all_choices)
+    -- mod_log_info(module_object_name .. ".set_shop_stock #all_choices: ", #all_choices)
     local total_choices = #all_choices
     local items_per_stock_line = 10
     local number_of_pages = math.ceil(total_choices / items_per_stock_line)
-    mod_log_info(module_object_name .. ".set_shop_stock Pages: ", number_of_pages)
+    -- mod_log_info(module_object_name .. ".set_shop_stock Pages: ", number_of_pages)
     
     local range_start = 0
     local range_end = range_start + items_per_stock_line
 
     for page=1,number_of_pages do
         generate_stock_line(all_choices, range_start, items_per_stock_line)
-        mod_log_info(module_object_name .. " set_shop_stock.pageloop range_start_before", range_start)
+        -- mod_log_info(module_object_name .. " set_shop_stock.pageloop range_start_before", range_start)
         range_start = range_end + 1
-        mod_log_info(module_object_name .. " set_shop_stock.pageloop range_start_after", range_start)
+        -- mod_log_info(module_object_name .. " set_shop_stock.pageloop range_start_after", range_start)
         range_end = range_start + items_per_stock_line
     end
 
@@ -180,40 +186,40 @@ function rotate_darbee_stock(npc_id, npc_full_stock)
     if npc_shop_id ~= nil then
 
         local npc_shop_slots = api_get_slots(npc_shop_id) -- get all of the shop's menu slots
-        mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots", npc_shop_slots)
+        -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots", npc_shop_slots)
 
         if darbee_stock_index == #npc_full_stock then -- if the stock index is already the maximum lines available in the full stock then reset to 1 for next time
 
-            mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots darbee_stock_index_before", darbee_stock_index)
+            -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots darbee_stock_index_before", darbee_stock_index)
             darbee_stock_index = 1
-            mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots darbee_stock_index_after", darbee_stock_index)
+            -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots darbee_stock_index_after", darbee_stock_index)
 
         else -- otherwise add 1 to the stock index for next time
 
             darbee_stock_index = darbee_stock_index + 1
-            mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots darbee_stock_index_after", darbee_stock_index)
+            -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots darbee_stock_index_after", darbee_stock_index)
 
         end
 
-        mod_log_info(module_object_name .. ".rotate_darbee_stock npc_full_stock: ", npc_full_stock)
+        -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_full_stock: ", npc_full_stock)
 
         for slot=2,11 do -- shop menus start at slot 2, slot 1 is the specials slot
 
             if npc_full_stock[darbee_stock_index][slot-1] ~= nil then -- the stock menu starts at 1 so we need to remove 1 from the index for each item
-                mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots loop npc_full_stock: ", npc_full_stock[darbee_stock_index][slot-1])
-                mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots loop before", npc_shop_slots[slot])
+                -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots loop npc_full_stock: ", npc_full_stock[darbee_stock_index][slot-1])
+                -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots loop before", npc_shop_slots[slot])
                 api_slot_set(npc_shop_slots[slot]["id"], npc_full_stock[darbee_stock_index][slot-1], 0)
 
             else -- clear slots that don't have an item for that index on the current page
-                mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots loop clear before", npc_shop_slots[slot])
+                -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots loop clear before", npc_shop_slots[slot])
                 api_slot_clear(npc_shop_slots[slot]["id"])
 
             end
 
         end
 
-        mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots darbee_stock_index", darbee_stock_index)
-        mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots npc_full_stock #", #npc_full_stock)
+        -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots darbee_stock_index", darbee_stock_index)
+        -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots npc_full_stock #", #npc_full_stock)
 
     end
 end
