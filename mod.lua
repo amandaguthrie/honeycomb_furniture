@@ -1,8 +1,8 @@
 MOD_NAME = "honeycomb_furniture"
 MOD_NAME_FRIENDLY = "Honeycomb Furniture"
-DEV_MODE_ENABLED = false
+DEV_MODE_ENABLED = true
 LOGGING_SUCCESSES_ENABLED = false
-LOGGING_FAILURES_ENABLED = false
+LOGGING_FAILURES_ENABLED = true
 LOGGING_INFO_ENABLED = false
 
 ----------------------------------------------------
@@ -14,7 +14,7 @@ function register()
     return {
       name = MOD_NAME,
       hooks = {"key", "ready"}, 
-      modules = {"objects", "npcs", "utilities"} 
+      modules = {"objects", "npcs", "quests", "utilities"} 
     }
 
 end
@@ -34,6 +34,9 @@ function init()
   -- Define NPCs
   define_npcs()
 
+  -- Define Quests
+  define_quests(quest_gifs, quests)
+
   -- Return "Success" To Load Mod
   return "Success"
 
@@ -47,6 +50,9 @@ function ready()
 
   -- Create Darbee NPC if he doesn't exist.
   create_npc("npc325")
+
+  -- Unlock the first quest.
+  unlock_first_quest()
   
   return "Success"
 end
