@@ -11,6 +11,7 @@ This was primarily written for the creator to learn Lua as a language and the di
 | ID | Type | Name |
 | --- | --- | --- |
 | 325 | [npc](https://wiki.apico.buzz/wiki/Modding_API#api_define_npc()) | Darbee |
+| hf_quest_1 | [quest](https://wiki.apico.buzz/wiki/Modding_API#api_define_quest()) | HF: Meet Darbee |
 
 ### Mod ID Space
 | ID | Type | Name |
