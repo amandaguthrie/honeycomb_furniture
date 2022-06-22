@@ -1,16 +1,16 @@
 local module_object_name = "objects"
 
 furniture_items = {}
-test_furniture_items = {"log","honeycomb","beeswax","propolis","axe1","hammer1","beehive1","beehive2","beehive3","beehive4","beehive5","beehive6","beehive7","beehive8","beehive9","beehive10"}
+local test_furniture_items = {"log","honeycomb","beeswax","propolis","axe1","hammer1","beehive1","beehive2","beehive3","beehive4","beehive5","beehive6","beehive7","beehive8","beehive9","beehive10"}
 
 ----------------------------------------------------
 -- WORKBENCH VARIABLES
 ----------------------------------------------------
-decoration_tab = {id = "t1", label = "Decoration"}
-dining_tab = {id = "t2", label = "Dining"}
-storage_tab = {id = "t3", label = "Storage"}
-four_tab = {id = "t4", label = "4"}
-other_tab = {id = "t5", label = "Other"}
+local decoration_tab = {id = "t1", label = "Decoration"}
+local dining_tab = {id = "t2", label = "Dining"}
+local storage_tab = {id = "t3", label = "Storage"}
+local four_tab = {id = "t4", label = "4"}
+local other_tab = {id = "t5", label = "Other"}
 
 
 ----------------------------------------------------
@@ -281,9 +281,11 @@ function define_objects(table_of_objects)
             mod_log_status(api_define_object_status, function_name, "defining " .. table_of_objects[object]["name"] .. " object.")
             if api_define_object_status ~= "Success" then function_status = nil end
 
+            local object_oid = construct_id(table_of_objects[object]["id"])
+
             local define_recipe_object_status = api_define_recipe(
                 table_of_objects[object]["recipe_tab"],
-                construct_id(table_of_objects[object]["id"]),
+                object_oid,
                 table_of_objects[object]["recipe"],
                 table_of_objects[object]["amount"]
             )
@@ -292,7 +294,7 @@ function define_objects(table_of_objects)
             if define_recipe_object_status ~= "Success" then function_status = nil end
             
             if table_of_objects[object]["npc_special"] ~= true then
-                table.insert(furniture_items, construct_id(table_of_objects[object]["id"]))               
+                table.insert(furniture_items, object_oid)               
             end 
 
         end
@@ -325,7 +327,7 @@ local crate_y4 = 86
 -- CRATE MENU DEFAULTS
 ----------------------------------------------------
 
-menu_object_crate_defaults = {
+local menu_object_crate_defaults = {
     id = "",
     name = "",
     category = "Decoration",
@@ -354,7 +356,7 @@ menu_object_crate_defaults = {
     recipe_amount = 1    
 }
 
-menu_object_crate_small_defaults = {
+local menu_object_crate_small_defaults = {
     id = "",
     name = "",
     category = menu_object_crate_defaults["category"],
@@ -398,7 +400,7 @@ menu_object_crate_small_defaults = {
     recipe_amount = menu_object_crate_defaults["recipe_amount"]
 }
 
-menu_object_crate_large_defaults = {
+local menu_object_crate_large_defaults = {
     id = "",
     name = "",
     category = menu_object_crate_defaults["category"],
@@ -574,7 +576,7 @@ function define_menu_objects(table_of_menu_objects)
             if define_recipe_menu_object_status ~= "Success" then function_status = nil end
             
             if table_of_menu_objects[menu_object]["npc_special"] ~= true then
-                table.insert(furniture_items, construct_id(table_of_menu_objects[menu_object]["id"]))               
+                table.insert(furniture_items, menu_object_id)               
             end
 
 
