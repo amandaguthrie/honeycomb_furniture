@@ -14,7 +14,7 @@ function register()
     return {
       name = MOD_NAME,
       hooks = {"key", "ready"}, 
-      modules = {"objects", "menus", "npcs", "utilities"} 
+      modules = {"objects", "npcs", "utilities"} 
     }
 
 end
@@ -47,6 +47,7 @@ function ready()
 
   -- Create Darbee NPC if he doesn't exist.
   create_npc("npc325")
+  
   return "Success"
 end
 
