@@ -85,39 +85,44 @@ function create_npc(npc_oid)
     -- Get all of the menu objects for a given NPC OID. We don't need the full NPC object information, only the IDs.
     npc_all_objects = api_all_menu_objects(npc_oid)
 
-    -- If no NPC menu objects exist, spawn the NPC as an item into the player's inventory
-    if #npc_all_objects == 0 then
-
-        player = api_get_player_instance()
-        player_slots = api_get_slots(player)
-        npc_inventory_count = 0
-
-        -- Don't give the player another NPC item if there's already one in their player inventory.
-        for slot=1, #player_slots do
-            slot_info = api_get_slot(player, slot)
-
-            if slot_info["item"] == npc_oid then
-                npc_inventory_count = npc_inventory_count + 1
-            end
-        end
-
-
-       -- Give the player an NPC item that they can place where they want, rather than creating it directly on the map.
-        if npc_inventory_count == 0 then
-            api_give_item(npc_oid, 1)           
-        end
-
 
     -- If there is more than one NPC menu object active in the world, remove the extras
-    elseif #npc_all_objects > 1 then
+    if #npc_all_objects > 1 then
         
         for npc=2, #npc_all_objects do
             mod_log_info(module_object_name .. '.create_npc >1 npc_all_objects[npc]', npc_all_objects[npc])
             api_destroy_inst(npc_all_objects[npc])
         end
-    end
-end
 
+    end
+
+    -- Changed this out for Meet Darbee intro quest.
+
+    -- -- If no NPC menu objects exist, spawn the NPC as an item into the player's inventory
+ 
+    -- elseif #npc_all_objects == 0 then
+
+    --     player = api_get_player_instance()
+    --     player_slots = api_get_slots(player)
+    --     npc_inventory_count = 0
+
+    --     -- Don't give the player another NPC item if there's already one in their player inventory.
+    --     for slot=1, #player_slots do
+    --         slot_info = api_get_slot(player, slot)
+
+    --         if slot_info["item"] == npc_oid then
+    --             npc_inventory_count = npc_inventory_count + 1
+    --         end
+    --     end
+
+
+    --     -- Give the player an NPC item that they can place where they want, rather than creating it directly on the map. 
+    --     -- if npc_inventory_count == 0 then
+    --     --     api_give_item(npc_oid, 1)           
+    --     -- end
+end
+ 
+    
 ----------------------------------------------------
 -- SHOP STOCK DEFINITIONS
 ----------------------------------------------------
