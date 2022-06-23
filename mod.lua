@@ -1,8 +1,8 @@
 MOD_NAME = "honeycomb_furniture"
 MOD_NAME_FRIENDLY = "Honeycomb Furniture"
-DEV_MODE_ENABLED = true
+DEV_MODE_ENABLED = false
 LOGGING_SUCCESSES_ENABLED = false
-LOGGING_FAILURES_ENABLED = true
+LOGGING_FAILURES_ENABLED = false
 LOGGING_INFO_ENABLED = false
 
 ----------------------------------------------------
