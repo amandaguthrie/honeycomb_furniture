@@ -14,7 +14,7 @@ function register()
     return {
       name = MOD_NAME,
       hooks = {"key", "ready"}, 
-      modules = {"objects", "npcs", "quests", "utilities"} 
+      modules = {"bees", "items", "objects", "npcs", "quests", "utilities"} 
     }
 
 end
@@ -28,11 +28,17 @@ function init()
   -- Set Dev Mode Preference Based on Global Config
   set_dev_mode()
 
-  -- Create Furniture
+  -- Define Items
+  define_items()
+  
+  -- Define Furniture
   define_furniture()
 
   -- Define NPCs
   define_npcs()
+
+  -- Define Bees
+  define_bees()
 
   -- Define Quests
   define_quests(quest_gifs, quests)
@@ -47,6 +53,7 @@ end
 ----------------------------------------------------
 
 function ready()
+
 
   -- Create Darbee NPC if he doesn't exist.
   create_npc("npc325")

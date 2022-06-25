@@ -4,13 +4,14 @@ local module_object_name = "utilities"
 -- SET DEV MODE BASED ON GLOBAL
 ----------------------------------------------------
 
+--- Enable dev mode and define helpful testing commands.
 function set_dev_mode()
 
     if DEV_MODE_ENABLED == true then 
         api_set_devmode(true)
         api_define_command(
-            "/honeycomb_one_of_everything",
-            "gimme_one_of_everything"
+            "/honeycomb_everything",
+            "gimme_everything"
         )
         -- NPCs cannot be deleted via bin. This allows devs to do this for testing. Place the NPC on the map and then run the command.
         api_define_command(
@@ -128,10 +129,9 @@ end
 ----------------------------------------------------
 
 
--- Give player one of each item. Useful during testing.
----@param untransformed_id string The object ID without the mod name prepended.
+-- Give player every item. Useful during testing.
 --- 
-function gimme_one_of_everything()
+function gimme_everything()
 
     api_give_item(construct_id("honeycomb_bookshelf"), 1)
     api_give_item(construct_id("honeycomb_trophyshelf"), 1)
@@ -139,6 +139,7 @@ function gimme_one_of_everything()
     api_give_item(construct_id("bee_plush_happy"), 1)
     api_give_item(construct_id("honeycomb_crate_large"), 1)
     api_give_item(construct_id("honeycomb_crate_small"), 1)
+    api_give_item(construct_id("sturdy_honeycomb"), 20)
 
 end
 
@@ -153,6 +154,9 @@ function destroy_npc(args)
 
 end
 
+function api_get_definition_for(oid)
+    mod_log_info("test", api_get_definition(oid))
+end
 
 -- * This is functional but slowed down game loading. Maybe only pull when bookshelf is placed?
 
