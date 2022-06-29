@@ -1,6 +1,11 @@
 local module_object_name = "objects"
 
-furniture_items = {}
+furniture_items = {
+    -- "bee:builder"
+}
+
+local oid_sturdy_honeycomb = construct_id("sturdy_honeycomb")
+
 local test_furniture_items = {"log","honeycomb","beeswax","propolis","axe1","hammer1","beehive1","beehive2","beehive3","beehive4","beehive5","beehive6","beehive7","beehive8","beehive9","beehive10"}
 
 ----------------------------------------------------
@@ -29,8 +34,8 @@ function define_furniture()
     local furniture_status = define_objects(objects_to_define)
     if furniture_status ~= "Success" then function_status = nil end
 
-    local menu_status = define_menu_objects(menu_objects_to_define)
-    if furniture_status ~= "Success" then function_status = nil end
+    local menu_status = define_menu_objects(crate_menu_objects_to_define)
+    if menu_status ~= "Success" then function_status = nil end
 
     mod_log_status(function_status, function_name, log_message)
 
@@ -74,8 +79,8 @@ local object_defaults = {
 --        category = category_decoration, -- example only
     tooltip = "An object made of honeycomb.", -- example only
     shop_key = false,
-    shop_sell = 30,
-    shop_buy = 15,
+    shop_sell = 15,
+    shop_buy = 30,
     machines = {},
     tools = {"hammer1"},
     place_grass = true,
@@ -90,7 +95,7 @@ local object_defaults = {
     item_sprite = "sprites/furniture/honeycomb_object_item.png", -- example only
     recipe = {
         { item = "honeycomb", amount = 20 },
-        { item = "beeswax", amount = 10 }       
+        { item = oid_sturdy_honeycomb, amount = 10 }       
     }, -- example only
     recipe_tab = decoration_tab["id"], --defined on objects.lua, example only
     recipe_amount = 1
@@ -129,10 +134,12 @@ objects_to_define = {
         sprite = "sprites/furniture/honeycomb_bookshelf_object.png",
         recipe = {
             { item = "honeycomb", amount = 20 },
-            { item = "beeswax", amount = 10 }       
+            { item = oid_sturdy_honeycomb, amount = 10 }       
         },
         recipe_tab = decoration_tab["id"],
-        recipe_amount = object_defaults["amount"]
+        recipe_amount = object_defaults["amount"],
+        npc_special = false,
+        unlock_recipe_after = "hf_quest_3"
     },
     {
         id = "honeycomb_trophyshelf",
@@ -140,8 +147,8 @@ objects_to_define = {
         category = "Decoration",
         tooltip = "A trophy shelf made of honeycomb.",
         shop_key = object_defaults["shop_key"],
-        shop_sell = 30,
-        shop_buy = 15,
+        shop_sell = 15,
+        shop_buy = 30,
         machines = object_defaults["machines"],
         tools = object_defaults["tools"],
         place_grass = object_defaults["place_grass"],
@@ -163,11 +170,12 @@ objects_to_define = {
         sprite = "sprites/furniture/honeycomb_trophyshelf_object.png",
         recipe = {
             { item = "honeycomb", amount = 20 },
-            { item = "beeswax", amount = 10 }    
+            { item = oid_sturdy_honeycomb, amount = 10 }    
         },
         recipe_tab = decoration_tab["id"],
         recipe_amount = object_defaults["amount"],
-        npc_special = false
+        npc_special = false,
+        unlock_recipe_after = "hf_quest_3"
     },
 
 -- * DINING * --
@@ -178,8 +186,8 @@ objects_to_define = {
         category = "Dining",
         tooltip = "A table made of honeycomb.",
         shop_key = object_defaults["shop_key"],
-        shop_sell = 30,
-        shop_buy = 15,
+        shop_sell = 15,
+        shop_buy = 30,
         machines = object_defaults["machines"],
         tools = object_defaults["tools"],
         place_grass = object_defaults["place_grass"],
@@ -201,11 +209,12 @@ objects_to_define = {
         sprite = "sprites/furniture/honeycomb_table_object.png",
         recipe = {
             { item = "honeycomb", amount = 15 },
-            { item = "beeswax", amount = 10 }
+            { item = oid_sturdy_honeycomb, amount = 10 }
         },
         recipe_tab = dining_tab["id"],
         recipe_amount = object_defaults["amount"],
-        npc_special = false
+        npc_special = false,
+        unlock_recipe_after = "hf_quest_3"
     },
 
 -- * OTHER * --
@@ -239,14 +248,17 @@ objects_to_define = {
         recipe = {
             { item = "honeycomb", amount = 5 },
             { item = "propolis", amount = 10 },
-            { item = "beeswax", amount = 3 }
+            { item = oid_sturdy_honeycomb, amount = 3 }
         },
         recipe_tab = other_tab["id"],
         recipe_amount = object_defaults["amount"],
-        npc_special = true
+        npc_special = true,
+        unlock_recipe_after = "hf_quest_4"
     }
 }
 
+--- Define objects.
+---@param table_of_objects table --- A table of objects including their object definitions and npc_special status.
 function define_objects(table_of_objects)
 
     local function_name = "define_objects"
@@ -280,18 +292,8 @@ function define_objects(table_of_objects)
 
             mod_log_status(api_define_object_status, function_name, "defining " .. table_of_objects[object]["name"] .. " object.")
             if api_define_object_status ~= "Success" then function_status = nil end
-
+ 
             local object_oid = construct_id(table_of_objects[object]["id"])
-
-            local define_recipe_object_status = api_define_recipe(
-                table_of_objects[object]["recipe_tab"],
-                object_oid,
-                table_of_objects[object]["recipe"],
-                table_of_objects[object]["amount"]
-            )
-
-            mod_log_status(api_define_object_status, function_name, "defining " .. table_of_objects[object]["name"] .. " recipe.")
-            if define_recipe_object_status ~= "Success" then function_status = nil end
             
             if table_of_objects[object]["npc_special"] ~= true then
                 table.insert(furniture_items, object_oid)               
@@ -301,7 +303,37 @@ function define_objects(table_of_objects)
 
     end
 
-    return mod_log_status(function_status, function_name, "defining objects or recipes.")
+    return mod_log_status(function_status, function_name, "defining objects.")
+
+end
+
+--- Define object recipes in stages based on quest status.
+---@param table_of_objects table --- A table of object definitions including their recipe definitions and unlock_recipe_after
+---@param quest_name string --- This should correspond with the ID in the quest definition.
+function define_object_recipes(table_of_objects, quest_name)
+    local function_name = module_object_name .. ".define_object_recipes: "
+    local function_status = "Success"
+
+    for object = 1, #table_of_objects do
+
+        local object_oid = construct_id(table_of_objects[object]["id"])
+
+        if table_of_objects[object]["unlock_recipe_after"] == quest_name then
+
+            local define_recipe_object_status = api_define_recipe(
+                table_of_objects[object]["recipe_tab"],
+                object_oid,
+                table_of_objects[object]["recipe"],
+                table_of_objects[object]["amount"]
+            )
+        
+            mod_log_status(define_recipe_object_status, function_name, "defining " .. table_of_objects[object]["name"] .. " recipe.") 
+
+            if define_recipe_object_status ~= "Success" then function_status = nil end
+        end
+    end
+
+    return mod_log_status(function_status, function_name, " defining object recipes.")
 
 end
 
@@ -457,7 +489,7 @@ local menu_object_crate_large_defaults = {
 }
 
 
-menu_objects_to_define = {
+crate_menu_objects_to_define = {
     {
         id = "honeycomb_crate_large",
         name = "Large Honeycomb Crate",
@@ -485,10 +517,12 @@ menu_objects_to_define = {
         recipe_tab = menu_object_crate_large_defaults["recipe_tab"],
         recipe = {
             { item = "honeycomb", amount = 20 },
-            { item = "beeswax", amount = 10 }            
+            { item = oid_sturdy_honeycomb, amount = 10 }            
         },
         recipe_amount = menu_object_crate_large_defaults["recipe_amount"],
-        npc_special = false
+        npc_special = false,
+        menu_object_type = "crate",
+        unlock_recipe_after = "hf_quest_3"
     },
     {
         id = "honeycomb_crate_small",
@@ -517,13 +551,17 @@ menu_objects_to_define = {
         recipe_tab = menu_object_crate_small_defaults["recipe_tab"],
         recipe = {
             { item = "honeycomb", amount = 15 },
-            { item = "beeswax", amount = 5 }        
+            { item = oid_sturdy_honeycomb, amount = 5 }        
         },
         recipe_amount = menu_object_crate_small_defaults["recipe_amount"],
-        npc_special = false
+        npc_special = false,
+        menu_object_type = "crate",
+        unlock_recipe_after = "hf_quest_3"
     }    
 }
 
+--- Define menu objects.
+---@param table_of_menu_objects table --- A table of menu object definitions as well as  npc_special.
 function define_menu_objects(table_of_menu_objects)
 
     local function_name = "define_menu_objects"
@@ -563,27 +601,62 @@ function define_menu_objects(table_of_menu_objects)
             mod_log_status(api_define_menu_object_status, function_name, "defining " .. table_of_menu_objects[menu_object]["name"] .. " menu object.")
             if api_define_menu_object_status ~= "Success" then function_status = nil end
 
-            local menu_object_id = construct_id(table_of_menu_objects[menu_object]["id"])
-            
-            local define_recipe_menu_object_status = api_define_recipe(
-                table_of_menu_objects[menu_object]["recipe_tab"],
-                menu_object_id,
-                table_of_menu_objects[menu_object]["recipe"],
-                table_of_menu_objects[menu_object]["recipe_amount"]
-            )
-
-            mod_log_status(define_recipe_menu_object_status, function_name, "defining " .. table_of_menu_objects[menu_object]["name"] .. " recipe.")
-            if define_recipe_menu_object_status ~= "Success" then function_status = nil end
+            local menu_object_oid = construct_id(table_of_menu_objects[menu_object]["id"])
             
             if table_of_menu_objects[menu_object]["npc_special"] ~= true then
-                table.insert(furniture_items, menu_object_id)               
+                table.insert(furniture_items, menu_object_oid)               
             end
-
 
         end
 
     end
 
-    return mod_log_status(function_status, function_name, "defining menu objects or recipes.")
+    return mod_log_status(function_status, function_name, "defining menu objects.")
 
+end
+
+--- Define menu object recipes in stages based on quest status.
+---@param table_of_menu_objects table --- A table of menu object definitions including their recipe definitions and unlock_recipe_after
+---@param quest_name string --- This should correspond with the ID in the quest definition.
+function define_menu_object_recipes(table_of_menu_objects, quest_name)
+    local function_name = module_object_name .. ".define_menu_object_recipes: "
+    local function_status = "Success"
+
+    if #table_of_menu_objects ~= 0 then
+
+        for menu_object = 1, #table_of_menu_objects do
+
+            local menu_object_id = construct_id(table_of_menu_objects[menu_object]["id"])
+
+            if table_of_menu_objects[menu_object]["unlock_recipe_after"] == quest_name then
+                local define_recipe_status = api_define_recipe(
+                    table_of_menu_objects[menu_object]["recipe_tab"],
+                    menu_object_id,
+                    table_of_menu_objects[menu_object]["recipe"],
+                    table_of_menu_objects[menu_object]["recipe_amount"]                
+                )
+    
+                mod_log_status(define_recipe_status, function_name, "defining " .. table_of_menu_objects[menu_object]["name"] .. " recipe.")
+                if define_recipe_status ~= "Success" then function_status = nil end               
+            end
+
+        end
+    end
+    return mod_log_status(function_status, function_name, " defining menu object recipes.")
+end
+
+--- Check the save data for completed quests and define recipes for workbench.
+function mod_load_recipe_check()
+    local function_name = module_object_name .. ".mod_load_recipe_check: "
+    local quest_list = quests
+    local quest_progress_length = get_table_length(QUEST_PROGRESS)
+
+    for save_quest_progress = 1, quest_progress_length do
+        local quest_id = quest_list[save_quest_progress]["quest_definition"]["id"]
+        if QUEST_PROGRESS[quest_id] == "completed" then
+            define_object_recipes(objects_to_define, quest_id)
+            define_menu_object_recipes(crate_menu_objects_to_define, quest_id)
+        end
+        
+    end
 end

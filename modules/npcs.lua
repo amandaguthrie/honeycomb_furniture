@@ -145,12 +145,12 @@ function generate_stock_line(all_choices, range_start, number_of_items)
     local new_stock_line = {}
     table.move(all_choices, range_start, range_end, 0, new_stock_line)
 
-    -- mod_log_info(module_object_name .. " generate_stock_line New Stock Line: ", new_stock_line)
-    -- mod_log_info(module_object_name .. " generate_stock_line New Stock Line #: ", #new_stock_line)
+    mod_log_info(module_object_name .. " generate_stock_line New Stock Line: ", new_stock_line)
+    mod_log_info(module_object_name .. " generate_stock_line New Stock Line #: ", #new_stock_line)
 
     table.insert(shop_stock_darbee, new_stock_line)
 
-    -- mod_log_info(module_object_name .. "Shop_Stock_Darbee: ", #shop_stock_darbee)
+    mod_log_info(module_object_name .. "Shop_Stock_Darbee: ", #shop_stock_darbee)
 
     return "Success"
 end
@@ -200,7 +200,7 @@ function rotate_darbee_stock(npc_id, npc_full_stock)
             -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots darbee_stock_index_after", darbee_stock_index)
 
         else -- otherwise add 1 to the stock index for next time
-
+            -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots darbee_stock_index_before", darbee_stock_index)
             darbee_stock_index = darbee_stock_index + 1
             -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots darbee_stock_index_after", darbee_stock_index)
 
@@ -213,7 +213,7 @@ function rotate_darbee_stock(npc_id, npc_full_stock)
             if npc_full_stock[darbee_stock_index][slot-1] ~= nil then -- the stock menu starts at 1 so we need to remove 1 from the index for each item
                 -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots loop npc_full_stock: ", npc_full_stock[darbee_stock_index][slot-1])
                 -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots loop before", npc_shop_slots[slot])
-                api_slot_set(npc_shop_slots[slot]["id"], npc_full_stock[darbee_stock_index][slot-1], 0)
+                api_slot_set(npc_shop_slots[slot]["id"], npc_full_stock[darbee_stock_index][slot-1], 0) -- Amount should be zero for shops otherwise it writes the qty over the price
 
             else -- clear slots that don't have an item for that index on the current page
                 -- mod_log_info(module_object_name .. ".rotate_darbee_stock npc_shop_slots loop clear before", npc_shop_slots[slot])
