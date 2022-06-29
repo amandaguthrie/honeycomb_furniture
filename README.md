@@ -19,7 +19,6 @@ This was primarily written for the creator to learn Lua as a language and the di
 ### Mod ID Space
 | ID | Type | Name |
 | --- | --- | --- |
-
 | honeycomb_furniture_honeycomb_crate_large | [menu object](https://wiki.apico.buzz/wiki/Modding_API#api_define_menu_object()) | Large Honeycomb Crate |
 | honeycomb_furniture_honeycomb_crate_small | [menu object](https://wiki.apico.buzz/wiki/Modding_API#api_define_menu_object()) | Small Honeycomb Crate |
 | honeycomb_furniture_honeycomb_bookshelf | [object](https://wiki.apico.buzz/wiki/Modding_API#api_define_object()) | Honeycomb Bookshelf |
