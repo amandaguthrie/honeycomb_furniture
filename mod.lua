@@ -1,5 +1,6 @@
 MOD_NAME = "honeycomb_furniture"
 MOD_NAME_FRIENDLY = "Honeycomb Furniture"
+MOD_SAVE_DATA = {}
 DEV_MODE_ENABLED = false
 LOGGING_SUCCESSES_ENABLED = false
 LOGGING_FAILURES_ENABLED = false
@@ -13,8 +14,8 @@ function register()
 
     return {
       name = MOD_NAME,
-      hooks = {"key", "ready"}, 
-      modules = {"bees", "items", "objects", "npcs", "quests", "utilities"} 
+      hooks = {"data", "key", "ready", "save"}, 
+      modules = {"bees", "items", "objects", "mdata", "npcs", "quests", "utilities"} 
     }
 
 end
@@ -24,6 +25,9 @@ end
 ----------------------------------------------------
 
 function init() 
+
+  -- Get save DATA
+  api_get_data()
   
   -- Set Dev Mode Preference Based on Global Config
   set_dev_mode()
@@ -54,13 +58,12 @@ end
 
 function ready()
 
-
   -- Create Darbee NPC if he doesn't exist.
   create_npc("npc325")
 
   -- Unlock the first quest.
   unlock_first_quest()
-  
+
   return "Success"
 end
 
@@ -85,6 +88,36 @@ function key(key_code)
       return "Success"
     end
 
+  end
+
+end
+
+----------------------------------------------------
+-- DATA AND SAVES
+----------------------------------------------------
+
+function save()
+  mod_log_info("mod.save", "Save called.")
+  MOD_SAVE_DATA["times_saved"] = MOD_SAVE_DATA["times_saved"] + 1
+  api_set_data(MOD_SAVE_DATA)
+end
+
+function data(event, event_data)
+  if event == "LOAD" then
+    if event_data ~= nil then
+      MOD_SAVE_DATA = event_data
+      QUEST_PROGRESS = event_data["quest_progress"]
+      mod_log_info("mod.data.Load: Complete - ", MOD_SAVE_DATA)
+      mod_log_info("mod.data.Load: Complete - ", get_table_length(QUEST_PROGRESS))
+      -- Add unlocked recipes to workbench based on quest progress
+      mod_load_recipe_check()
+    else
+      first_load()
+    end
+  end
+
+  if event == "SAVE" and event_data ~= nil then
+    mod_log_info("mod.data.Save: Complete - ", MOD_SAVE_DATA)
   end
 
 end

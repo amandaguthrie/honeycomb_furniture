@@ -83,46 +83,16 @@ function construct_id(untransformed_id)
 
 end
 
-
 ----------------------------------------------------
--- COROUTINE ASYNC
+-- GET STRING TABLE LENGTH
 ----------------------------------------------------
--- function await(function_name)
---     local coroutine_running = coroutine.running()
---     local ret
---     function_name(function(...)
---         if coroutine.status(coroutine_running) == "running" then
---             ret = table.pack(...)
---         else
---             return coroutine.resume(coroutine_running, ...)
---         end
---     end)
---     if ret then
---         return table.unpack(ret, 1, ret.n)
---     else
---         return coroutine.yield()
---     end
--- end
-
-----------------------------------------------------
--- ITERATE ELEMENTS IN A LIST
-----------------------------------------------------
-
--- function iterate_elements(element_collection)
-
---     local index = 0
---     local count = #element_collection
-
---     return function()
---         index = index + 1
-
---         if index <= count then
---             return collection[index]
---         end
-
---     end
-
--- end
+function get_table_length(table_name)
+    local table_size = 0
+    for key, value in pairs(table_name) do
+        table_size = table_size + 1
+    end
+    return table_size
+end
 
 ----------------------------------------------------
 -- DEV MODE HELPERS

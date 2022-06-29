@@ -63,7 +63,7 @@ quests = {
                 -- width = "" -- for gif
             }
         },
-        claim_script = nil
+        claim_script = "quest_one_claim"
     },
     {
         quest_definition = {
@@ -116,7 +116,7 @@ quests = {
             text = "Could you bring me one of what you discover?"
             }       
         },
-        claim_script = nil
+        claim_script = "quest_two_claim"
     },
     {
         quest_definition = {
@@ -257,8 +257,28 @@ function unlock_object_recipes(table_of_objects, quest_name)
 
 end 
 
+function complete_quest(quest_id)
+    local function_name = module_object_name .. ".complete_quest: "
+    mod_log_info(function_name .. "Completed Status:", MOD_SAVE_DATA["quest_progress"][quest_id])
+    MOD_SAVE_DATA["quest_progress"][quest_id] = "completed"
+    mod_log_info(function_name .. "Completed Status:", MOD_SAVE_DATA["quest_progress"][quest_id])
+end
+
+
+function quest_one_claim()
+    local quest_1_id = "hf_quest_1"
+    complete_quest(quest_1_id)    
+end
+
+function quest_two_claim()
+    local quest_2_id = "hf_quest_2"
+    complete_quest(quest_2_id)    
+end
+
 --- Unlock crate and object recipes after quest three
 function quest_three_claim()
-    unlock_crate_recipes(crate_menu_objects_to_define, "hf_quest_3")
-    unlock_object_recipes(objects_to_define, "hf_quest_3")
+    local quest_3_id = "hf_quest_3"
+    unlock_crate_recipes(crate_menu_objects_to_define, quest_3_id)
+    unlock_object_recipes(objects_to_define, quest_3_id)
+    complete_quest(quest_3_id)
 end

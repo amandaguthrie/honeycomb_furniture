@@ -1,10 +1,10 @@
 local module_object_name = "objects"
 
-furniture_items = {"bee:builder"}
-crate_objects = {}
+furniture_items = {
+    -- "bee:builder"
+}
 
 local oid_sturdy_honeycomb = construct_id("sturdy_honeycomb")
-
 
 local test_furniture_items = {"log","honeycomb","beeswax","propolis","axe1","hammer1","beehive1","beehive2","beehive3","beehive4","beehive5","beehive6","beehive7","beehive8","beehive9","beehive10"}
 
@@ -566,9 +566,6 @@ function define_menu_objects(table_of_menu_objects)
 
     local function_name = "define_menu_objects"
     local function_status = "Success"
-    -- local player_instance = api_get_player_instance()
-    -- local player_quest_progess = api_get_property(player_instance, "quest_progress")
-    -- mod_log_info(function_name, ".player_quest_process")
 
     if #table_of_menu_objects ~= 0 then
         for menu_object=1, #table_of_menu_objects do
@@ -619,7 +616,7 @@ function define_menu_objects(table_of_menu_objects)
 end
 
 --- Define menu object recipes in stages based on quest status.
----@param table_of_menu objects table --- A table of menu object definitions including their recipe definitions and unlock_recipe_after
+---@param table_of_menu_objects table --- A table of menu object definitions including their recipe definitions and unlock_recipe_after
 ---@param quest_name string --- This should correspond with the ID in the quest definition.
 function define_menu_object_recipes(table_of_menu_objects, quest_name)
     local function_name = module_object_name .. ".define_menu_object_recipes: "
@@ -646,4 +643,20 @@ function define_menu_object_recipes(table_of_menu_objects, quest_name)
         end
     end
     return mod_log_status(function_status, function_name, " defining menu object recipes.")
+end
+
+--- Check the save data for completed quests and define recipes for workbench.
+function mod_load_recipe_check()
+    local function_name = module_object_name .. ".mod_load_recipe_check: "
+    local quest_list = quests
+    local quest_progress_length = get_table_length(QUEST_PROGRESS)
+
+    for save_quest_progress = 1, quest_progress_length do
+        local quest_id = quest_list[save_quest_progress]["quest_definition"]["id"]
+        if QUEST_PROGRESS[quest_id] == "completed" then
+            define_object_recipes(objects_to_define, quest_id)
+            define_menu_object_recipes(crate_menu_objects_to_define, quest_id)
+        end
+        
+    end
 end
